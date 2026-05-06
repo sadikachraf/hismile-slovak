@@ -171,7 +171,7 @@
     .submit{width:100%;border:none;background:linear-gradient(135deg,var(--purple),var(--purple2));color:white;border-radius:999px;padding:18px 16px;font-size:17px;font-weight:950;cursor:pointer;box-shadow:0 16px 36px rgba(91,22,184,.28);margin-top:6px}
     .submit:disabled{opacity:.62;cursor:not-allowed}
     .security{font-size:12px;color:var(--muted);text-align:center;margin-top:12px;font-weight:650}
-    .success{display:none;text-align:center;padding:34px 10px}
+    .success{display:none;text-align:center;padding:44px 16px;min-height:360px;align-items:center;justify-content:center;flex-direction:column}
     .success .circle{width:76px;height:76px;border-radius:50%;background:#E9FFF6;color:var(--green);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:36px}
     .success h3{font-size:28px;letter-spacing:-.04em;color:#111;margin-bottom:8px}
     .success p{color:var(--muted);font-weight:650}
@@ -266,14 +266,10 @@
             <a href="#objednat" class="cta">Chcem jasnejší úsmev →</a>
             <a href="#ako-funguje" class="cta secondary">Ako funguje?</a>
           </div>
-          <p class="under-cta">💜 Najobľúbenejší balík: 2 ks za €44.90 · Doručenie po Slovensku</p>
+          <p class="under-cta">💜 TikTok trend teraz dostupný na Slovensku · Platba pri doručení</p>
         </div>
         <div class="hero-card">
           <img src="./images/1.webp" alt="hismile v34 Colour Corrector na mramorovej kúpeľňovej poličke">
-          <div class="price-bubble">
-            <div><span>Od</span><strong>€29.90</strong></div>
-            <div><span>Platba pri doručení</span><strong>🇸🇰</strong></div>
-          </div>
         </div>
       </div>
     </section>
@@ -413,7 +409,7 @@
             <div class="selected-box"><strong id="sel-name">2 ks – najobľúbenejšie</strong><span id="sel-price">€44.90</span></div>
             <div class="fg"><label for="f-name">Meno a priezvisko *</label><input id="f-name" type="text" placeholder="Napr. Jana Nováková" autocomplete="name"></div>
             <div class="fg"><label for="f-phone">Telefónne číslo *</label><input id="f-phone" type="tel" placeholder="+421 9XX XXX XXX" autocomplete="tel"></div>
-            <div class="fg"><label for="f-email">E-mail <span style="color:#8a8198;font-weight:700">(voliteľné)</span></label><input id="f-email" type="email" placeholder="vas@email.sk" autocomplete="email"></div>
+            <div class="fg"><label for="f-email">E-mail *</label><input id="f-email" type="email" placeholder="vas@email.sk" autocomplete="email" required></div>
             <div class="fg"><label for="f-street">Ulica a číslo domu *</label><input id="f-street" type="text" placeholder="Napr. Hlavná 15" autocomplete="street-address"></div>
             <div class="form-row">
               <div class="fg"><label for="f-city">Mesto *</label><input id="f-city" type="text" placeholder="Bratislava" autocomplete="address-level2"></div>
@@ -522,13 +518,22 @@
   }
 
   function submitOrder(){
-    const required = ['f-name','f-phone','f-street','f-city','f-zip'];
+    const required = ['f-name','f-phone','f-email','f-street','f-city','f-zip'];
     let ok = true;
     required.forEach(id => {
       const bad = !document.getElementById(id).value.trim();
       markError(id,bad);
       if(bad) ok = false;
     });
+    const emailEl = document.getElementById('f-email');
+    const emailValue = emailEl.value.trim();
+    const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue);
+    if(emailValue && !emailValid){
+      markError('f-email', true);
+      alert('Prosím zadajte platný e-mail.');
+      return;
+    }
+
     if(!ok){ alert('Prosím vyplňte všetky povinné polia označené *'); return; }
 
     fireInitiateCheckout();
@@ -563,10 +568,10 @@
     }
 
     document.getElementById('form-body').style.display = 'none';
-    document.getElementById('success-box').style.display = 'block';
+    document.getElementById('success-box').style.display = 'flex';
     document.getElementById('order-ref').textContent = 'Referenčné číslo: ' + ref;
     firePurchase(pkg, ref);
-    document.getElementById('objednat').scrollIntoView({behavior:'smooth',block:'start'});
+    setTimeout(() => { document.getElementById('success-box').scrollIntoView({behavior:'smooth', block:'center'}); }, 80);
   }
 </script>
 </body>
